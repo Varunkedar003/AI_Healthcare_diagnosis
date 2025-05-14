@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mental Health Companion - Review and Feedback</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <nav class="sidebar">
+        <h2>Mental Health Companion</h2>
+        <ul class="sidebar-nav">
+            <li><a href="/templates/">Diagnosis</a></li>
+            <li><a href="appointment.html">Appointment</a></li>
+            <li><a href="relaxation.html">Relaxation Games</a></li>
+            <li><a href="call.html">Audio/Video Call</a></li>
+            <li><a href="books.html">Read Books</a></li>
+            <li><a href="community.html">Community Support</a></li>
+            <li><a href="settings.html">Settings</a></li>
+            <li><a href="feedback.html">Review and Feedback</a></li>
+        </ul>
+    </nav>
+    <div class="main-content">
+        <header>
+            <h1>Review and Feedback</h1>
+        </header>
+        <div class="content">
+            <section id="feedback-form" class="section">
+                <h2>Provide Your Feedback</h2>
+                <form id="user-feedback">
+                    <label for="rating">Overall Rating:</label>
+                    <select id="rating" name="rating" required>
+                        <option value="">Select a rating</option>
+                        <option value="5">5 - Excellent</option>
+                        <option value="4">4 - Very Good</option>
+                        <option value="3">3 - Good</option>
+                        <option value="2">2 - Fair</option>
+                        <option value="1">1 - Poor</option>
+                    </select><br>
+                    <label for="feedback-text">Your Feedback:</label><br>
+                    <textarea id="feedback-text" name="feedback-text" rows="4" required></textarea><br>
+                    <label for="improvement">Suggestions for Improvement:</label><br>
+                    <textarea id="improvement" name="improvement" rows="4"></textarea><br>
+                    <button type="submit">Submit Feedback</button>
+                </form>
+            </section>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById("user-feedback").addEventListener("submit", function (e) {
+            e.preventDefault();
+            alert("Thank you for your feedback! (This is a placeholder - actual feedback submission functionality would need to be implemented)");
+        });
+    </script>
+</body>
+</html>

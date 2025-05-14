@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mental Health Companion - Settings</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <nav class="sidebar">
+        <h2>Mental Health Companion</h2>
+        <ul class="sidebar-nav">
+            <li><a href="/templates/">Diagnosis</a></li>
+            <li><a href="appointment.html">Appointment</a></li>
+            <li><a href="relaxation.html">Relaxation Games</a></li>
+            <li><a href="call.html">Audio/Video Call</a></li>
+            <li><a href="books.html">Read Books</a></li>
+            <li><a href="community.html">Community Support</a></li>
+            <li><a href="settings.html">Settings</a></li>
+            <li><a href="feedback.html">Review and Feedback</a></li>
+        </ul>
+    </nav>
+    <div class="main-content">
+        <header>
+            <h1>Settings</h1>
+        </header>
+        <div class="content">
+            <section id="appearance" class="section">
+                <h2>Appearance</h2>
+                <label for="dark-mode">Dark Mode:</label>
+                <input type="checkbox" id="dark-mode" name="dark-mode">
+            </section>
+            <section id="account" class="section">
+                <h2>Account</h2>
+                <button id="logout-btn">Logout</button>
+            </section>
+            <section id="notifications" class="section">
+                <h2>Notifications</h2>
+                <label for="email-notifications">Email Notifications:</label>
+                <input type="checkbox" id="email-notifications" name="email-notifications" checked>
+            </section>
+            <section id="privacy" class="section">
+                <h2>Privacy</h2>
+                <label for="profile-visibility">Profile Visibility:</label>
+                <select id="profile-visibility" name="profile-visibility">
+                    <option value="public">Public</option>
+                    <option value="friends">Friends Only</option>
+                    <option value="private">Private</option>
+                </select>
+            </section>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById("dark-mode").addEventListener("change", function() {
+            document.body.classList.toggle("dark-mode");
+        });
+
+        document.getElementById("logout-btn").addEventListener("click", function() {
+            alert("Logged out successfully! (This is a placeholder - actual logout functionality would need to be implemented)");
+        });
+    </script>
+</body>
+</html>

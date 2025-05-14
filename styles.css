@@ -1,0 +1,36 @@
+/* Existing styles */
+
+/* Add these new styles */
+#videoContainer {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 20px;
+}
+
+#localVideo, #remoteVideo {
+    width: 45%;
+    border: 1px solid #ccc;
+}
+
+#bookList {
+    list-style-type: none;
+    padding: 0;
+}
+
+#bookList li {
+    cursor: pointer;
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+}
+
+#bookList li:hover {
+    background-color: #f0f0f0;
+}
+
+#bookContent {
+    margin-top: 20px;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
