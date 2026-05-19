@@ -1,0 +1,221 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    display: flex;
+    min-height: 100vh;
+    background-color: #f4f7f9;
+}
+
+.sidebar {
+    width: 250px;
+    background-color: #2c3e50;
+    color: #ecf0f1;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar h2 {
+    margin-bottom: 20px;
+    font-size: 1.5em;
+}
+
+.sidebar-nav {
+    list-style-type: none;
+}
+
+.sidebar-nav li {
+    margin-bottom: 10px;
+}
+
+.sidebar-nav a {
+    color: #ecf0f1;
+    text-decoration: none;
+    font-size: 1.1em;
+    transition: color 0.3s;
+}
+
+.sidebar-nav a:hover {
+    color: #3498db;
+}
+
+.main-content {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+header {
+    background-color: #3498db;
+    color: #fff;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+header h1 {
+    font-size: 1.8em;
+}
+
+.content {
+    padding: 20px;
+    overflow-y: auto;
+}
+
+.section {
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+h2 {
+    color: #2c3e50;
+    margin-bottom: 15px;
+}
+
+input[type="text"], input[type="email"], input[type="date"], input[type="time"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+button {
+    background-color: #3498db;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #2980b9;
+}
+
+.game {
+    margin-bottom: 20px;
+}
+
+#breathingCircle {
+    width: 100px;
+    height: 100px;
+    background-color: #3498db;
+    border-radius: 50%;
+    margin: 20px auto;
+    transition: transform 4s ease-in-out;
+}
+
+#colorGrid, #sudokuGrid, #crosswordGrid, #nQueensBoard, #slidingPuzzleGrid {
+    display: grid;
+    gap: 5px;
+    margin: 20px auto;
+}
+
+#colorGrid {
+    grid-template-columns: repeat(3, 1fr);
+    max-width: 300px;
+}
+
+.colorCell, .sudokuCell, .crosswordCell, .nQueensCell, .puzzleCell {
+    width: 100%;
+    padding-bottom: 100%;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+#sudokuGrid {
+    grid-template-columns: repeat(9, 1fr);
+    max-width: 360px;
+}
+
+#crosswordGrid {
+    grid-template-columns: repeat(10, 1fr);
+    max-width: 400px;
+}
+
+#nQueensBoard {
+    grid-template-columns: repeat(8, 1fr);
+    max-width: 320px;
+}
+
+#slidingPuzzleGrid {
+    grid-template-columns: repeat(4, 1fr);
+    max-width: 240px;
+}
+
+.sudokuCell, .crosswordCell {
+    border: 1px solid #ddd;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+}
+
+.nQueensCell {
+    border: 1px solid #ddd;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+}
+
+.puzzleCell {
+    background-color: #e0e0e0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+}
+/* 🌙 Dark Mode */
+body.dark-mode {
+    background-color: #121212;
+    color: #ffffff;
+}
+
+/* Sidebar */
+body.dark-mode .sidebar {
+    background-color: #1e1e1e;
+}
+
+/* Main content */
+body.dark-mode .main-content {
+    background-color: #181818;
+}
+
+/* Cards / sections */
+body.dark-mode .content,
+body.dark-mode .section {
+    background-color: #222;
+    color: #fff;
+}
+
+/* Input fields */
+body.dark-mode input,
+body.dark-mode textarea,
+body.dark-mode select {
+    background-color: #333;
+    color: #fff;
+    border: 1px solid #555;
+}
+
+/* Buttons */
+body.dark-mode button {
+    background-color: #444;
+    color: #fff;
+}
+
+/* Links */
+body.dark-mode a {
+    color: #4da6ff;
+}

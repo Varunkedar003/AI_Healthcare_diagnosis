@@ -1,190 +1,176 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, send_file
 import pickle
 from flask_cors import CORS
 import io
-from flask import Flask, jsonify, send_file
 
-# Initialize Flask app
 app = Flask(__name__)
-CORS(app)  # Enable CORS for all routes
+CORS(app)
 
-# Dummy user data for login (in a real-world app, use a database)
-valid_email = 'test@example.com'
-valid_password = 'password123'
+# ===================== LOAD MODEL =====================
 
-# Load the model and vectorizer
-with open('mental_health_model.pkl', 'rb') as model_file:
-    model = pickle.load(model_file)
+with open('mental_health_model.pkl', 'rb') as f:
+    model = pickle.load(f)
 
-with open('vectorizer.pkl', 'rb') as vectorizer_file:
-    vectorizer = pickle.load(vectorizer_file)
+with open('vectorizer.pkl', 'rb') as f:
+    vectorizer = pickle.load(f)
 
-# Dummy data for doctors
-doctors_data = [
-    {"id": 1, "name": "Dr. Alice", "specialization": "Psychiatrist"},
-    {"id": 2, "name": "Dr. Bob", "specialization": "Therapist"},
-    {"id": 3, "name": "Dr. Carol", "specialization": "Neurologist"},
-    {"id": 4, "name": "Dr. Dave", "specialization": "Counselor"},
-]
+# ===================== NORMALIZATION =====================
 
-# Store booked appointments
-appointments = []
+def normalize(text):
+    text = text.lower()
+    text = text.replace("bp", "blood pressure")
+    text = text.replace("tight chest", "chest pain")
+    text = text.replace("chest discomfort", "chest pain")
+    text = text.replace("tired", "fatigue")
+    text = text.replace("loose motion", "diarrhea")
+    return text
 
-# Define recommendations
-def provide_recommendations(symptoms):
-    transformed_symptoms = vectorizer.transform([symptoms])
-    prediction = model.predict(transformed_symptoms)[0]
-    recommendations = {
-        'Depression': "Primary Treatment: Consider therapy, regular exercise, and maintaining a consistent sleep schedule.\nBooks: 'Feeling Good' by David D. Burns, 'The Noonday Demon' by Andrew Solomon.",
-        'Anxiety': "Primary Treatment: Try relaxation techniques like meditation, and seek support from a counselor.\nBooks: 'The Anxiety and Phobia Workbook' by Edmund J. Bourne, 'Dare' by Barry McDonagh.",
-        'Bipolar Disorder': "Primary Treatment: Consult a psychiatrist for mood stabilization strategies and medication if needed.\nBooks: 'An Unquiet Mind' by Kay Redfield Jamison, 'The Bipolar Disorder Survival Guide' by David J. Miklowitz.",
-        'Cognitive Impairment': "Primary Treatment: Engage in cognitive exercises and consult a neurologist if symptoms persist.\nBooks: 'Keep Sharp' by Sanjay Gupta, 'The Brain's Way of Healing' by Norman Doidge.",
-        'Anger Management': "Primary Treatment: Practice mindfulness and consider anger management therapy.\nBooks: 'Anger: Wisdom for Cooling the Flames' by Thich Nhat Hanh, 'The Cow in the Parking Lot' by Leonard Scheff and Susan Edmiston."
-    }
-    return {
-        "condition": prediction,
-        "recommendation": recommendations.get(prediction, 'No specific recommendation available.')
-    }
+# ===================== TEMP USER STORAGE =====================
 
-# Define the API endpoint for login
-@app.route('/login', methods=['POST'])
-def login():
-    data = request.json
-    email = data.get('email')
-    password = data.get('password')
+users = []
 
-    # Check the email and password (this is just an example with static values)
-    if email == valid_email and password == valid_password:
-        return jsonify({"message": "Login successful!"}), 200
-    else:
-        return jsonify({"error": "Invalid email or password"}), 400
+# ===================== PAGE ROUTES =====================
 
-# Define the API endpoint for predictions
-@app.route('/predict', methods=['POST'])
-def predict():
-    data = request.json
-    if 'symptoms' not in data:
-        return jsonify({"error": "Missing 'symptoms' field in request."}), 400
-
-    symptoms = data['symptoms']
-    result = provide_recommendations(symptoms)
-    return jsonify(result)
-
-# Define the API endpoint for suggesting doctors
-@app.route('/suggest-doctors', methods=['POST'])
-def suggest_doctors():
-    data = request.json
-    symptoms = data.get('symptoms', [])
-
-    # Dummy logic for doctor suggestions based on symptoms
-    suggested_doctors = [doctor for doctor in doctors_data if "Psychiatrist" in doctor['specialization'] or "Therapist" in doctor['specialization']]
-
-    return jsonify(suggested_doctors)
-
-# Define the API endpoint for booking appointments
-@app.route('/book-appointment', methods=['POST'])
-def book_appointment():
-    data = request.json
-    doctor_id = data.get('doctor_id')
-    date = data.get('date')
-    time = data.get('time')
-
-    # Find doctor by ID
-    doctor = next((doc for doc in doctors_data if doc['id'] == doctor_id), None)
-    if not doctor:
-        return jsonify({"error": "Doctor not found"}), 404
-
-    # Save appointment details
-    appointment = {
-        "doctor": doctor,
-        "date": date,
-        "time": time
-    }
-    appointments.append(appointment)
-
-    return jsonify({"message": f"Appointment booked with {doctor['name']} on {date} at {time}"}), 200
-
-# Serve the HTML page (index.html)
 @app.route('/')
 def home():
     return render_template('index.html')
 
-books = [
-    {
-        "id": 1,
-        "title": "Feeling Good",
-        "author": "David D. Burns",
-        "content": """..."""  # Truncated content from the example above
-    },
-    {
-        "id": 2,
-        "title": "The Anxiety and Phobia Workbook",
-        "author": "Edmund J. Bourne",
-        "content": """..."""  # Truncated content from the example above
-    },
-    {
-        "id": 3,
-        "title": "An Unquiet Mind",
-        "author": "Kay Redfield Jamison",
-        "content": """..."""  # Truncated content from the example above
+@app.route('/appointment')
+def appointment():
+    return render_template('appointment.html')
+
+@app.route('/relaxation')
+def relaxation():
+    return render_template('relaxation.html')
+
+@app.route('/call')
+def call():
+    return render_template('call.html')
+
+@app.route('/books-page')
+def books_page():
+    return render_template('books.html')
+
+@app.route('/community')
+def community():
+    return render_template('community.html')
+
+@app.route('/settings')
+def settings():
+    return render_template('settings.html')
+
+@app.route('/feedback')
+def feedback():
+    return render_template('feedback.html')
+
+@app.route('/login-page')
+def login_page():
+    return render_template('login.html')
+
+@app.route('/register')
+def register():
+    return render_template('register.html')
+
+# ===================== LOGIN =====================
+
+@app.route('/login', methods=['POST'])
+def login():
+    data = request.json
+
+    for user in users:
+        if user['email'] == data.get('email') and user['password'] == data.get('password'):
+            return jsonify({"message": "Login successful!"})
+
+    if data.get('email') == "test@example.com" and data.get('password') == "password123":
+        return jsonify({"message": "Login successful!"})
+
+    return jsonify({"error": "Invalid email or password"}), 400
+
+# ===================== REGISTER =====================
+
+@app.route('/register-user', methods=['POST'])
+def register_user():
+    data = request.json
+
+    users.append({
+        "name": data.get('name'),
+        "email": data.get('email'),
+        "password": data.get('password')
+    })
+
+    return jsonify({"message": "Registered successfully"})
+
+# ===================== PREDICTION =====================
+
+@app.route('/predict', methods=['POST'])
+def predict():
+    data = request.json
+    symptoms = data.get('symptoms')
+
+    if not symptoms:
+        return jsonify({"error": "No symptoms provided"}), 400
+
+    # normalize input
+    text = normalize(symptoms)
+
+    vec = vectorizer.transform([text])
+
+    prediction = model.predict(vec)[0]
+    confidence = model.predict_proba(vec).max()
+
+    # recommendations
+    recommendations = {
+        'Depression': "Exercise, therapy, proper sleep",
+        'Anxiety': "Meditation and relaxation",
+        'Bipolar Disorder': "Consult psychiatrist",
+        'Cognitive Impairment': "Brain exercises",
+        'Anger Management': "Mindfulness practice",
+        'Flu': "Rest and hydration",
+        'Common Cold': "Drink fluids",
+        'Diabetes': "Monitor sugar levels",
+        'Heart Disease': "Seek medical help immediately",
+        'Migraine': "Rest in dark room",
+        'Arthritis': "Exercise and medication",
+        'Thyroid': "Check hormone levels",
+        'Hypertension': "Reduce salt intake",
+        'Food Poisoning': "Stay hydrated",
+        'Allergy': "Avoid allergens"
     }
+
+    return jsonify({
+        "condition": prediction,
+        "confidence": round(confidence * 100, 2),
+        "recommendation": recommendations.get(prediction, "No recommendation available")
+    })
+
+# ===================== BOOKS =====================
+
+books = [
+    {"id": 1, "title": "Feeling Good", "author": "David Burns", "content": "Sample content"},
+    {"id": 2, "title": "Anxiety Workbook", "author": "Edmund Bourne", "content": "Sample content"}
 ]
-
-# Route to fetch all books
-# @app.route('/books', methods=['GET'])
-# def get1_books():
-#     return jsonify({"books": books})
-
-# Route to fetch a single book by ID
-@app.route('/books/<int:book_id>', methods=['GET'])
-def get_book(book_id):
-    book = next((book for book in books if book['id'] == book_id), None)
-    if book:
-        return jsonify(book)
-    return jsonify({"error": "Book not found"}), 404
-
-# Route to download a book's content as a text file
-@app.route('/books/<int:book_id>/download', methods=['GET'])
-def download_book(book_id):
-    book = next((book for book in books if book['id'] == book_id), None)
-    if not book:
-        return jsonify({"error": "Book not found"}), 404
-
-    # Create a text file in memory
-    content = book['content']
-    filename = f"{book['title']}.txt"
-    text_file = io.BytesIO()
-    text_file.write(content.encode('utf-8'))
-    text_file.seek(0)
-
-    return send_file(
-        text_file,
-        as_attachment=True,
-        download_name=filename,
-        mimetype='text/plain'
-    )
-# @app.route('/books/<int:book_id>/download', methods=['GET'])
-# def download_book(book_id):
-#     book = next((book for book in books if book['id'] == book_id), None)
-#     if book is None:
-#         return jsonify({"error": "Book not found"}), 404
-    
-#     content = f"Title: {book['title']}\nAuthor: {book['author']}\n\n{book['content']}"
-#     buffer = io.BytesIO(content.encode('utf-8'))
-#     buffer.seek(0)
-#     return send_file(
-#         buffer,
-#         as_attachment=True,
-#         download_name=f"{book['title']}.txt",
-#         mimetype='text/plain'
-#     )
-
-
 
 @app.route('/books', methods=['GET'])
 def get_books():
-    
     return jsonify(books)
+
+@app.route('/books/<int:book_id>/download')
+def download_book(book_id):
+    book = next((b for b in books if b['id'] == book_id), None)
+
+    if not book:
+        return jsonify({"error": "Not found"}), 404
+
+    buffer = io.BytesIO(book['content'].encode())
+
+    return send_file(
+        buffer,
+        as_attachment=True,
+        download_name=f"{book['title']}.txt",
+        mimetype='text/plain'
+    )
+
+# ===================== RUN =====================
 
 if __name__ == '__main__':
     app.run(debug=True)
